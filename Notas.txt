@@ -1,0 +1,6 @@
+
+
+1.	Usar Data Transfer Object para envio y recepcion de informacion de parte del cliente al servidor.
+	De esta forma no se expone por completo las entidades usadas en el negocio del sistema.
+
+2.	Realizar inyeccion de dependencias, usar interfaces para manejar los datos gestionados en la aplicacion.
