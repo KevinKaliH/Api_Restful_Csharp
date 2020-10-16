@@ -4,3 +4,14 @@
 	De esta forma no se expone por completo las entidades usadas en el negocio del sistema.
 
 2.	Realizar inyeccion de dependencias, usar interfaces para manejar los datos gestionados en la aplicacion.
+
+3.	Importante conocer los estatus de codigo http
+
+4.	Packete nuget popular conocer [automapper], acompañado con dto.
+	automapper permite hacer conversiones de una clase a otra. para lograr lo de las clases de entidades a dto
+	-> el paquete comun descargado en nuget es "Automapper.extensions.microsoft.dependencyInjection"
+
+5.	Conocer sobre Refactor de palabras: seleccionar la palabra, luego teclear[ctrl+ rr] luego de haber seleccionado cambiar la palabra
+	con la nueva palabra que desea cambiar y dar en appy.
+
+6.	 
