@@ -14,4 +14,20 @@
 5.	Conocer sobre Refactor de palabras: seleccionar la palabra, luego teclear[ctrl+ rr] luego de haber seleccionado cambiar la palabra
 	con la nueva palabra que desea cambiar y dar en appy.
 
-6.	 
+ *******************************************************************************************************************
+ ------- Web Api Configuration and Fluent Validations  ------
+ Con la libreria en nuget "Fluent Validation" esto es para validar las transacciones de los datos.
+
+	Conceptos basicos.
+
+a) que es un controlador. 
+	-> para manejar rutas de una entidad y logica simple
+	-> hacer herencia de la clase [controllerbase] para apis o [controller] el cual tiene como agregado
+		poder manejar tambien como una aplicacion normal no solamente acciones de apis.
+	-> [ApiController] tambien tiene muchos metodos que contribuyen en el desarrollo de la api.
+
+b) Metodo para validar datos mirar imagen https://andrewlock.net/content/images/2018/02/filters.png
+
+b) para validaciones instalar [fluentvalidation.aspnetcore]
+
+	

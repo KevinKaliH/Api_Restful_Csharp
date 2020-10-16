@@ -34,15 +34,15 @@ namespace Practica1.Controllers
             var postsDto = mapper.Map<IEnumerable<PostDTO>>(posts);
 
             //sin mapper
-            //var posts = await postRepository.GetPosts();
-            //var postsDto = posts.Select(x => new PostDTO
-            //{
-            //    PostId = x.PostId,
-            //    Date = x.Date,
-            //    Description = x.Description,
-            //    Image = x.Image,
-            //    UserId = x.UserId
-            //});
+            /*var posts = await postRepository.GetPosts();
+            var postsDto = posts.Select(x => new PostDTO
+            {
+                PostId = x.PostId,
+                Date = x.Date,
+                Description = x.Description,
+                Image = x.Image,
+                UserId = x.UserId
+            });*/
 
             return Ok(postsDto);
         }
@@ -59,6 +59,10 @@ namespace Practica1.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(PostDTO _post)
         {
+            //metodo 1 para validar solicitud
+            /*if (!ModelState.IsValid)
+                return BadRequest();*/
+
             var post = mapper.Map<Post>(_post);
 
             await postRepository.InsertPost(post);
