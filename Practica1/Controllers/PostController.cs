@@ -1,14 +1,11 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using Practica1.Responses;
 using SocialMediaCore.DTOs;
 using SocialMediaCore.Entidades;
 using SocialMediaCore.Interfaces;
-using SocialMediaInfraestructure.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Practica1.Controllers
@@ -17,26 +14,26 @@ namespace Practica1.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly IPostRepository postRepository;
+        private readonly IPostService postService;
         private readonly IMapper mapper;
 
-        public PostController(IPostRepository _postRepository, IMapper _mapper)
+        public PostController(IPostService _postService, IMapper _mapper)
         {
-            postRepository = _postRepository;
+            postService = _postService;
             mapper = _mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetPosts()
         {
-            var posts = await postRepository.GetPosts();
+            var posts = await postService.GetPosts();
 
             //con mapper
             var postsDto = mapper.Map<IEnumerable<PostDTO>>(posts);
             var response = new ApiResponse<IEnumerable<PostDTO>>(postsDto);
 
             //sin mapper
-            /*var posts = await postRepository.GetPosts();
+            /*var posts = await postService.GetPosts();
             var postsDto = posts.Select(x => new PostDTO
             {
                 PostId = x.PostId,
@@ -52,7 +49,7 @@ namespace Practica1.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
-            var post = await postRepository.GetPost(id);
+            var post = await postService.GetPost(id);
             var postDto = mapper.Map<PostDTO>(post);
             var response = new ApiResponse<PostDTO>(postDto);
 
@@ -64,7 +61,7 @@ namespace Practica1.Controllers
         {
             var post = mapper.Map<Post>(_post);
 
-            await postRepository.InsertPost(post);
+            await postService.InsertPostAsync(post);
             var postDto = mapper.Map<PostDTO>(post);
 
             var response = new ApiResponse<PostDTO>(postDto);
@@ -77,7 +74,7 @@ namespace Practica1.Controllers
             var post = mapper.Map<Post>(_post);
             post.PostId = id;
 
-            var result = await postRepository.UpdatePostAsync(post);
+            var result = await postService.UpdatePostAsync(post);
             var response = new ApiResponse<bool>(result);
 
             return Ok(response);
@@ -86,7 +83,7 @@ namespace Practica1.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await postRepository.DeleteAsync(id);
+            var result = await postService.DeleteAsync(id);
             var response = new ApiResponse<bool>(result);
 
             return Ok(response);

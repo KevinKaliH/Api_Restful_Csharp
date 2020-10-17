@@ -30,4 +30,8 @@ b) Metodo para validar datos mirar imagen https://andrewlock.net/content/images/
 
 b) para validaciones instalar [fluentvalidation.aspnetcore]
 
+************************************************************************************************************
+Combinaciones de teclas
+	[CTRL + ri] = genera una interfaz basado con los metodos creados en una clase.
+
 	
