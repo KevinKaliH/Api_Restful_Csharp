@@ -13,9 +13,9 @@ namespace SocialMediaInfraestructure.Data.Configuration
         {
             builder.ToTable("Comentario");   //para decirle que comments en ingles hace referencia a la tabla comentario en sql
                                             //tambien agregar el nombre de la columna que hace referencia el nuevo valor en ingles.
-            builder.HasKey(e => e.CommentId);
+            builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.CommentId)
+            builder.Property(e => e.Id)
                 .HasColumnName("IdComentario")  //escribir esta sentencia.
                 .ValueGeneratedNever();
 

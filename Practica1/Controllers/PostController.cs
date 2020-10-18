@@ -72,7 +72,7 @@ namespace Practica1.Controllers
         public async Task<IActionResult> Put(int id, PostDTO _post)
         {
             var post = mapper.Map<Post>(_post);
-            post.PostId = id;
+            post.Id = id;
 
             var result = await postService.UpdatePostAsync(post);
             var response = new ApiResponse<bool>(result);

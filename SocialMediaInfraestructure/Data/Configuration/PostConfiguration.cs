@@ -10,10 +10,10 @@ namespace SocialMediaInfraestructure.Data.Configuration
         {
             builder.ToTable("Publicacion");
 
-            builder.Property(e => e.PostId)
+            builder.Property(e => e.Id)
                 .HasColumnName("IdPublicacion");
              
-            builder.HasKey(e => e.PostId);
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.UserId)
                 .HasColumnName("IdUsuario");

@@ -48,8 +48,8 @@ namespace Practica1
             //Para resolver inyeccion de dependencias
             //siempre que hayan peticiones a post pues se realizara la injeccion de dependencia
             services.AddTransient<IPostService, PostService>();
-            services.AddTransient<IPostRepository, PostRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             //Registrar un filtro de forma global y fluentvalidator
             services.AddMvc(options =>

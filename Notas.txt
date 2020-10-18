@@ -34,4 +34,8 @@ b) para validaciones instalar [fluentvalidation.aspnetcore]
 Combinaciones de teclas
 	[CTRL + ri] = genera una interfaz basado con los metodos creados en una clase.
 
-	
+************************************************************************************************************
+-> Programacion Generica.
+-> Patron [Unit of work]
+
+

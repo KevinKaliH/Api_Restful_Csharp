@@ -13,9 +13,9 @@ namespace SocialMediaInfraestructure.Data.Configuration
         {
             builder.ToTable("Usuario");
 
-            builder.HasKey(e => e.UserId);
+            builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.UserId)
+            builder.Property(e => e.Id)
                 .HasColumnName("IdUsuario");
 
             builder.Property(e => e.IsActive)
