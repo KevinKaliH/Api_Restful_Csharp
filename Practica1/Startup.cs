@@ -31,7 +31,10 @@ namespace Practica1
             services.AddAutoMapper( AppDomain.CurrentDomain.GetAssemblies() );
 
             //Para negar las con validaciones de datos de la api
-            services.AddControllers()
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<GlobalExceptionFilter>();
+                })
                 .AddNewtonsoftJson(options => {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;  
                 })

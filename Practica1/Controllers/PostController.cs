@@ -24,24 +24,12 @@ namespace Practica1.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts()
+        public IActionResult GetPosts()
         {
-            var posts = await postService.GetPosts();
+            var posts = postService.GetPosts();
 
-            //con mapper
             var postsDto = mapper.Map<IEnumerable<PostDTO>>(posts);
             var response = new ApiResponse<IEnumerable<PostDTO>>(postsDto);
-
-            //sin mapper
-            /*var posts = await postService.GetPosts();
-            var postsDto = posts.Select(x => new PostDTO
-            {
-                PostId = x.PostId,
-                Date = x.Date,
-                Description = x.Description,
-                Image = x.Image,
-                UserId = x.UserId
-            });*/
 
             return Ok(response);
         }
@@ -57,7 +45,7 @@ namespace Practica1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(PostDTO _post)
+        public async Task<IActionResult> Create(PostDTO _post)
         {
             var post = mapper.Map<Post>(_post);
 

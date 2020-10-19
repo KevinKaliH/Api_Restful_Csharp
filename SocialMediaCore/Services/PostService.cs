@@ -1,7 +1,9 @@
 ﻿using SocialMediaCore.Entidades;
+using SocialMediaCore.Exceptions;
 using SocialMediaCore.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SocialMediaCore.Services
@@ -20,9 +22,9 @@ namespace SocialMediaCore.Services
             return await unitOfWork.PostRepository.GetById(id);
         }
 
-        public async Task<IEnumerable<Post>> GetPosts()
+        public IEnumerable<Post> GetPosts()
         {
-            return await unitOfWork.PostRepository.GetAll();
+            return unitOfWork.PostRepository.GetAll();
         }
 
         public async Task InsertPostAsync(Post post)
@@ -30,25 +32,38 @@ namespace SocialMediaCore.Services
             var user = await unitOfWork.UserRepository.GetById(post.UserId);
             if(user == null)
             {
-                throw new Exception("Usuario no existe");
+                throw new BusinessException("Usuario no existe");
+            }
+
+            var userPost = await unitOfWork.PostRepository.GetPostsByUser(post.UserId);
+            if (userPost.Count() < 10)
+            {
+                var lastPost = userPost.OrderByDescending(x=>x.Date).FirstOrDefault();
+                if((DateTime.Now - lastPost.Date).TotalDays < 7)
+                {
+                    throw new BusinessException("No tiene permitido temporalmente publicar");
+                }
             }
 
             if (post.Description.Contains("sexo"))
             {
-                throw new Exception("Contenido no permitido");
+                throw new BusinessException("Contenido no permitido");
             }
             await unitOfWork.PostRepository.Add(post);
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task<bool> UpdatePostAsync(Post post)
         {
-            await unitOfWork.PostRepository.Update(post);
+            unitOfWork.PostRepository.Update(post);
+            await unitOfWork.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             await unitOfWork.PostRepository.Delete(id);
+            await unitOfWork.SaveChangesAsync();
             return true;
         }
     }
