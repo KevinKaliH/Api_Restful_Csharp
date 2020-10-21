@@ -1,10 +1,13 @@
 ﻿
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Practica1.Responses;
 using SocialMediaCore.DTOs;
 using SocialMediaCore.Entidades;
+using SocialMediaCore.Entidades.QueryFilters;
 using SocialMediaCore.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,13 +27,23 @@ namespace Practica1.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPosts()
+        public IActionResult GetPosts([FromQuery]PostQueryFilters filters)  //recibiendo parametros y decorandolo en una entidad
         {
-            var posts = postService.GetPosts();
+            var posts = postService.GetPosts(filters);
 
             var postsDto = mapper.Map<IEnumerable<PostDTO>>(posts);
             var response = new ApiResponse<IEnumerable<PostDTO>>(postsDto);
 
+            var metadata = new
+            {
+                posts.TotalCount,
+                posts.PageSize,
+                posts.CurrrentPage,
+                posts.TotalPages,
+                posts.HasNextPage,
+                posts.HasPreviousPage
+            };
+            Response.Headers.Add("x-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(response);
         }
 
