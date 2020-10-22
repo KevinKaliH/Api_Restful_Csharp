@@ -2,15 +2,19 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SocialMediaCore.Entidades.CustomEntities;
 using SocialMediaCore.Interfaces;
 using SocialMediaCore.Services;
 using SocialMediaInfraestructure.Data;
 using SocialMediaInfraestructure.Filters;
+using SocialMediaInfraestructure.Interfaces;
 using SocialMediaInfraestructure.Repositories;
+using SocialMediaInfraestructure.Services;
 using System;
 
 namespace Practica1
@@ -28,7 +32,7 @@ namespace Practica1
         public void ConfigureServices(IServiceCollection services)
         {
             //agregando automapping como servicio
-            services.AddAutoMapper( AppDomain.CurrentDomain.GetAssemblies() );
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //Para negar las con validaciones de datos de la api
             services.AddControllers(options =>
@@ -36,16 +40,19 @@ namespace Practica1
                     options.Filters.Add<GlobalExceptionFilter>();
                 })
                 .AddNewtonsoftJson(options => {
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;  
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 })
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     //options.SuppressModelStateInvalidFilter = true;   //esto es para impedir que apicontroller controle la validacion del controlador
                 });
 
+            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
+
             //para conectar con sqlserver
-            services.AddDbContext<SocialMediaContext>( options => 
-                options.UseSqlServer(Configuration.GetConnectionString("SocialMedia"))
+            services.AddDbContext<SocialMediaContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("SocialMedia"))
             );
 
             //Para resolver inyeccion de dependencias
@@ -53,6 +60,13 @@ namespace Practica1
             services.AddTransient<IPostService, PostService>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton <IUriService>(provider =>
+            {
+                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accesor.HttpContext.Request;
+                var absolutedUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(absolutedUri);
+            });
 
             //Registrar un filtro de forma global y fluentvalidator
             services.AddMvc(options =>

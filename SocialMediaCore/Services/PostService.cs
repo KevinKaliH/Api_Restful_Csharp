@@ -1,10 +1,10 @@
-﻿using SocialMediaCore.Entidades;
+﻿using Microsoft.Extensions.Options;
+using SocialMediaCore.Entidades;
 using SocialMediaCore.Entidades.CustomEntities;
 using SocialMediaCore.Entidades.QueryFilters;
 using SocialMediaCore.Exceptions;
 using SocialMediaCore.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,10 +13,12 @@ namespace SocialMediaCore.Services
     public class PostService : IPostService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly PaginationOptions paginationOptions;
 
-        public PostService(IUnitOfWork _unitOfWork)
+        public PostService(IUnitOfWork _unitOfWork, IOptions<PaginationOptions> options)
         {
             unitOfWork = _unitOfWork;
+            paginationOptions = options.Value;
         }
 
         public async Task<Post> GetPost(int id)
@@ -26,6 +28,9 @@ namespace SocialMediaCore.Services
 
         public PageList<Post> GetPosts(PostQueryFilters filters)
         {
+            filters.PageNumber = filters.PageNumber == 0 ? paginationOptions.DefaultPageNumber : filters.PageNumber;
+            filters.PageSize = filters.PageSize == 0 ? paginationOptions.DefaultPageSize : filters.PageSize;
+
             var posts = unitOfWork.PostRepository.GetAll();
             if (filters.UserId != null)
             {
