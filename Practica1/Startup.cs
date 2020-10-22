@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using SocialMediaCore.Entidades.CustomEntities;
 using SocialMediaCore.Interfaces;
 using SocialMediaCore.Services;
@@ -16,6 +17,8 @@ using SocialMediaInfraestructure.Interfaces;
 using SocialMediaInfraestructure.Repositories;
 using SocialMediaInfraestructure.Services;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace Practica1
 {
@@ -68,6 +71,16 @@ namespace Practica1
                 return new UriService(absolutedUri);
             });
 
+            //para generar la documentacion de la api
+            services.AddSwaggerGen(doc =>
+            {
+                doc.SwaggerDoc("v1",new OpenApiInfo { Title="Social Api",Version="v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                doc.IncludeXmlComments(xmlPath);
+            });
+
             //Registrar un filtro de forma global y fluentvalidator
             services.AddMvc(options =>
             {
@@ -87,6 +100,14 @@ namespace Practica1
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json/","Social Media Api V1");
+                options.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

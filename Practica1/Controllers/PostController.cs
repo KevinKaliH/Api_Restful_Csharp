@@ -10,11 +10,14 @@ using SocialMediaCore.Entidades.QueryFilters;
 using SocialMediaCore.Interfaces;
 using SocialMediaInfraestructure.Interfaces;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Practica1.Controllers
 {
-    [Route("api/{controller}")]
+    [Produces("application/json")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
     {
@@ -29,7 +32,14 @@ namespace Practica1.Controllers
             uriService = _uriService;
         }
 
+        /// <summary>
+        /// Retrieve all posts
+        /// </summary>
+        /// <param name="filters">Filters to apply</param>
+        /// <returns></returns>
         [HttpGet(Name = nameof(GetPosts))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<PostDTO>>))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetPosts([FromQuery]PostQueryFilters filters)  //recibiendo parametros y decorandolo en una entidad
         {
             var posts = postService.GetPosts(filters);

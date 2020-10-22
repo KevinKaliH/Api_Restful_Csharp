@@ -38,4 +38,9 @@ Combinaciones de teclas
 -> Programacion Generica.
 -> Patron [Unit of work]
 
+************************************************************************************************************
+OPENAPI -> estandar para crear documentacion de un software, con este usar
+	por medio de SWAGGER-> framework usado para el tema de documentacion.
+		* Api Documentation.
 
+En paquetes de nugets podemos usar Swashbuckle.AspNetCore para poder usar swagger.
