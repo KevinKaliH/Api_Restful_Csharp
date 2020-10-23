@@ -125,8 +125,8 @@ namespace Practica1
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json/","Social Media Api V1");
-                options.RoutePrefix = string.Empty;
+                options.SwaggerEndpoint("../swagger/v1/swagger.json/","Social Media Api V1");
+                //options.RoutePrefix = string.Empty;
             });
 
             app.UseRouting();
