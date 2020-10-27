@@ -64,6 +64,7 @@ namespace Practica1
             //Para resolver inyeccion de dependencias
             //siempre que hayan peticiones a post pues se realizara la injeccion de dependencia
             services.AddTransient<IPostService, PostService>();
+            services.AddTransient<ISecurityService, SecurityService>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton <IUriService>(provider =>
