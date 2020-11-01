@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SocialMediaCore.Entidades;
 using SocialMediaCore.Interfaces;
+using SocialMediaInfraestructure.Interfaces;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,11 +18,13 @@ namespace Practica1.Controllers
     {
         private readonly IConfiguration configuration;
         private readonly ISecurityService securityService;
+        private readonly IPasswordHasher passwordService;
 
-        public TokenController(IConfiguration _configuration, ISecurityService _securityService)
+        public TokenController(IConfiguration _configuration, ISecurityService _securityService, IPasswordHasher _passwordHasher)
         {
             configuration = _configuration;
             securityService = _securityService;
+            passwordService = _passwordHasher;
         }
 
         [HttpPost]
@@ -41,7 +44,9 @@ namespace Practica1.Controllers
         private async Task<(bool, Security)> IsValidUserAsync(UserLogin login)
         {
             var user = await securityService.GetLoginByCredentials(login);
-            return (user != null,user);
+            var isValid = passwordService.Check(user.Password, login.Password);
+
+            return (isValid, user);
         }
 
         private string GenerateToken(Security security)

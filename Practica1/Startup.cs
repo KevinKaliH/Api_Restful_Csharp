@@ -16,6 +16,7 @@ using SocialMediaCore.Services;
 using SocialMediaInfraestructure.Data;
 using SocialMediaInfraestructure.Filters;
 using SocialMediaInfraestructure.Interfaces;
+using SocialMediaInfraestructure.Options;
 using SocialMediaInfraestructure.Repositories;
 using SocialMediaInfraestructure.Services;
 using System;
@@ -55,6 +56,7 @@ namespace Practica1
                 });
 
             services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
+            services.Configure<PasswordOptions>(Configuration.GetSection("PasswordOptions"));
 
             //para conectar con sqlserver
             services.AddDbContext<SocialMediaContext>(options =>
@@ -67,6 +69,7 @@ namespace Practica1
             services.AddTransient<ISecurityService, SecurityService>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IPasswordHasher, PasswordService>();
             services.AddSingleton <IUriService>(provider =>
             {
                 var accesor = provider.GetRequiredService<IHttpContextAccessor>();
@@ -126,8 +129,8 @@ namespace Practica1
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("../swagger/v1/swagger.json/","Social Media Api V1");
-                //options.RoutePrefix = string.Empty;
+                options.SwaggerEndpoint("swagger/v1/swagger.json/","Social Media Api V1");
+                options.RoutePrefix = string.Empty;
             });
 
             app.UseRouting();

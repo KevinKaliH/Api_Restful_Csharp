@@ -50,3 +50,6 @@ En paquetes de nugets podemos usar Swashbuckle.AspNetCore para poder usar swagge
 ************************************************************************************************************
 Autenticacion JWT 
 	usar dependecia nuget [microsoft.aspnetcore.authentication.jwtbearer]
+
+
+http://elvanydev.com/SignalR-Core-SqlDependency-part2/

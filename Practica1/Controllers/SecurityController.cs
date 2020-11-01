@@ -11,6 +11,7 @@ using SocialMediaCore.DTOs;
 using SocialMediaCore.Entidades;
 using SocialMediaCore.Enumerations;
 using SocialMediaCore.Interfaces;
+using SocialMediaInfraestructure.Interfaces;
 
 namespace Practica1.Controllers
 {
@@ -21,12 +22,14 @@ namespace Practica1.Controllers
     public class SecurityController : ControllerBase
     {
         private readonly ISecurityService securityService;
+        private readonly IPasswordHasher passwordService;
         private readonly IMapper mapper;
 
-        public SecurityController(ISecurityService _securityService, IMapper _mapper)
+        public SecurityController(ISecurityService _securityService, IMapper _mapper, IPasswordHasher _passwordHasher)
         {
             securityService = _securityService;
             mapper = _mapper;
+            passwordService = _passwordHasher;
         }
 
         [HttpPost]
@@ -34,11 +37,13 @@ namespace Practica1.Controllers
         {
             var security = mapper.Map<Security>(_securityDTO);
 
+            security.Password = passwordService.Hash(_securityDTO.Password);
+
             await securityService.RegisterUser(security);
             var securityDTO = mapper.Map<SecurityDTO>(security);
 
             var response = new ApiResponse<SecurityDTO>(securityDTO);
-            return Ok(response);
+            return Ok();
         }
     }
 }
