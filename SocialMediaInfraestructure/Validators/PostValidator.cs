@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using SocialMediaCore.DTOs;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SocialMediaInfraestructure.Validators
 {
@@ -12,7 +10,8 @@ namespace SocialMediaInfraestructure.Validators
         {
             RuleFor(post => post.Description)
                 .NotNull()
-                .Length(5, 10);
+                .Length(5, 10)
+                .WithMessage("La descripcion no puede ser nula");
 
             RuleFor(post => post.Date)
                 .NotNull()

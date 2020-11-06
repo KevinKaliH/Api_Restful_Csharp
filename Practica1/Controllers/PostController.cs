@@ -11,7 +11,6 @@ using SocialMediaCore.Entidades.QueryFilters;
 using SocialMediaCore.Interfaces;
 using SocialMediaInfraestructure.Interfaces;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
 

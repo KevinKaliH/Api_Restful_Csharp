@@ -53,3 +53,11 @@ Autenticacion JWT
 
 
 http://elvanydev.com/SignalR-Core-SqlDependency-part2/
+
+************************************************************************************************************
+
+Extension Method
+	Es un metodo que nos permite extender la funcionalidad de un tipo de dato en especifico sin necesidad de instancias,
+	o crear clases nuevas.
+
+Tambien ver encadenamiento de metodos.

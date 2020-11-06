@@ -14,6 +14,7 @@ using SocialMediaCore.Entidades.CustomEntities;
 using SocialMediaCore.Interfaces;
 using SocialMediaCore.Services;
 using SocialMediaInfraestructure.Data;
+using SocialMediaInfraestructure.Extensions;
 using SocialMediaInfraestructure.Filters;
 using SocialMediaInfraestructure.Interfaces;
 using SocialMediaInfraestructure.Options;
@@ -55,46 +56,28 @@ namespace Practica1
                     //options.SuppressModelStateInvalidFilter = true;   //esto es para impedir que apicontroller controle la validacion del controlador
                 });
 
-            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
-            services.Configure<PasswordOptions>(Configuration.GetSection("PasswordOptions"));
+            //paginacion y password hash
+            services.AddOptions(Configuration);
 
             //para conectar con sqlserver
-            services.AddDbContext<SocialMediaContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("SocialMedia"))
-            );
+            services.AddDbContexts(Configuration);
 
             //Para resolver inyeccion de dependencias
             //siempre que hayan peticiones a post pues se realizara la injeccion de dependencia
-            services.AddTransient<IPostService, PostService>();
-            services.AddTransient<ISecurityService, SecurityService>();
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddSingleton<IPasswordHasher, PasswordService>();
-            services.AddSingleton <IUriService>(provider =>
-            {
-                var accesor = provider.GetRequiredService<IHttpContextAccessor>();
-                var request = accesor.HttpContext.Request;
-                var absolutedUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
-                return new UriService(absolutedUri);
-            });
+            services.AddServices();
 
             //para generar la documentacion de la api
-            services.AddSwaggerGen(doc =>
-            {
-                doc.SwaggerDoc("v1",new OpenApiInfo { Title="Social Api",Version="v1" });
+            services.AddSwaggerDocumentation($"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                doc.IncludeXmlComments(xmlPath);
-            });
-
+            //Agregando autenticacion
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options=>
+            }).AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters { 
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
@@ -129,7 +112,8 @@ namespace Practica1
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("swagger/v1/swagger.json/","Social Media Api V1");
+                //options.SwaggerEndpoint("../swagger/v1/swagger.json/", "Social Media Api V1");
+                options.SwaggerEndpoint("swagger/v1/swagger.json/", "Social Media Api V1");
                 options.RoutePrefix = string.Empty;
             });
 
